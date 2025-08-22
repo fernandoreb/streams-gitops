@@ -1,0 +1,13 @@
+- op: replace
+  path: /spec/replicas
+  value: 3
+
+- op: replace
+  path: /spec/resources
+  value:
+    limits:
+      cpu: "1000m"
+      memory: 2Gi
+    requests:
+      cpu: "1000m"
+      memory: 2Gi

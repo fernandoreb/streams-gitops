@@ -1,0 +1,39 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaNodePool
+metadata:
+  labels:
+    strimzi.io/cluster: cluster-banestes
+  name: broker
+spec:
+  replicas: 3
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 6Gi
+    requests:
+      cpu: 2000m
+      memory: 6Gi
+  roles:
+    - broker
+  storage:
+    type: jbod
+    volumes:
+      - id: 0
+        kraftMetadata: shared
+        size: 50Gi
+        type: persistent-claim
+      - id: 1
+        size: 50Gi
+        type: persistent-claim
+  template:
+    pod:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: strimzi.io/pool-name
+                    operator: In
+                    values:
+                      - broker
+              topologyKey: "kubernetes.io/hostname"

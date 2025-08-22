@@ -1,0 +1,12 @@
+- op: replace
+  path: /metadata/name
+  value: kafka-dev-og
+
+- op: replace
+  path: /metadata/namespace
+  value: kafka-dev
+
+- op: replace
+  path: /spec/targetNamespaces
+  value:
+    - kafka-dev

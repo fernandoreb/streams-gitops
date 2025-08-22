@@ -1,0 +1,36 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaNodePool
+metadata:
+  labels:
+    strimzi.io/cluster: cluster-banestes
+  name: controller
+spec:
+  replicas: 3
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+    requests:
+      cpu: 1000m
+      memory: 2Gi
+  roles:
+    - controller
+  storage:
+    type: jbod
+    volumes:
+      - id: 0
+        kraftMetadata: shared
+        size: 20Gi
+        type: persistent-claim
+  template:
+    pod:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: strimzi.io/pool-name
+                    operator: In
+                    values:
+                      - controller
+              topologyKey: "kubernetes.io/hostname"

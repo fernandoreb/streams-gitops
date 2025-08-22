@@ -1,0 +1,9 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  namespace: kafka-ambiente
+  name: kafka-ambiente
+spec:
+  targetNamespaces:
+    - kafka-ambiente
+  upgradeStrategy: Default

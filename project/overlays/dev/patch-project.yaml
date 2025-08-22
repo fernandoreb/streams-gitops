@@ -1,0 +1,11 @@
+- op: replace
+  path: /metadata/name
+  value: kafka-dev
+
+- op: add
+  path: /metadata/annotations
+  value:
+    openshift.io/description: Namespace dedicado ao kafka
+    scheduler.alpha.kubernetes.io/defaultTolerations: '[{"operator": "Exists", "effect": "NoSchedule","key":"amqstreams"}]'
+    openshift.io/display-name: kafka-dev
+    openshift.io/node-selector: region=dev,zone=amqstreams

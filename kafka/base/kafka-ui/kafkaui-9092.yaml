@@ -1,0 +1,119 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: kafka-ui-9092
+  labels:
+    app: kafka-ui-9092
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-ui-9092
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: kafka-ui-9092
+    spec:
+      volumes:
+        - name: kafka-truststore
+          secret:
+            secretName: cluster-banestes-cluster-ca-cert
+            defaultMode: 420
+      containers:
+        - resources: {}
+          terminationMessagePath: /dev/termination-log
+          name: kafka-ui-9092
+          env:
+            - name: KAFKA_CLUSTERS_0_NAME
+              value: kafka-cluster
+            - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
+              value: 'cluster-banestes-kafka-bootstrap.kafka-dev.svc.cluster.local:9092'
+            # - name: KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL
+            #   value: SASL_SSL
+            # - name: KAFKA_CLUSTERS_0_PROPERTIES_SASL_MECHANISM
+            #   value: SCRAM-SHA-512
+            # - name: KAFKA_CLUSTERS_0_SCRAM_USER
+            #   value: admin
+            # - name: KAFKA_CLUSTERS_0_SCRAM_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: user-admin
+            #       key: password
+            # - name: KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG
+            #   value: org.apache.kafka.common.security.scram.ScramLoginModule required username='$(KAFKA_CLUSTERS_0_SCRAM_USER)' password='$(KAFKA_CLUSTERS_0_SCRAM_PASSWORD)';
+            - name: KAFKA_CLUSTERS_0_METRICS_PORT
+              value: '9999'
+            # - name: KAFKA_CLUSTERS_0_PROPERTIES_SSL_TRUSTSTORE_LOCATION
+            #   value: /opt/cert/ca.p12
+            # - name: KAFKA_CLUSTERS_0_COMMON_SASL_MECHANISM
+            #   value: SCRAM-SHA-512
+            # - name: KAFKA_CLUSTERS_0_PROPERTIES_SSL_TRUSTSTORE_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: cluster-banestes-cluster-ca-cert
+            #       key: ca.password
+          ports:
+            - name: http-port
+              containerPort: 8080
+              protocol: TCP
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: kafka-truststore
+              readOnly: true
+              mountPath: /opt/cert
+          terminationMessagePolicy: File
+          image: provectuslabs/kafka-ui
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: kafka-ui-9092
+  labels:
+    app: kafka-ui-9092
+spec:
+  ipFamilies:
+    - IPv4
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  internalTrafficPolicy: Cluster
+  type: ClusterIP
+  ipFamilyPolicy: SingleStack
+  sessionAffinity: None
+  selector:
+    app: kafka-ui-9092
+
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: kafkaui
+  labels:
+    app: kafka-ui-9092
+spec:
+  host: kafkaui-kafka-dev.apps.ioc.nonprod.bcloud.sfb
+  to:
+    kind: Service
+    name: kafka-ui-9092
+    weight: 100
+  port:
+    targetPort: 8080
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: None
+  wildcardPolicy: None

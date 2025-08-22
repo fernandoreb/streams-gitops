@@ -1,0 +1,36 @@
+# criação sa
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: grafana-serviceaccount
+  namespace: kafka-dev
+  labels:
+    app: strimzi
+
+# criação da RoleBinding
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: grafana-cluster-monitoring-binding
+  namespace: kafka-dev    
+  labels:
+    app: strimzi
+subjects:
+  - kind: ServiceAccount
+    name: grafana-serviceaccount
+    namespace: kafka-dev
+roleRef:
+  kind: ClusterRole
+  name: cluster-monitoring-view
+  apiGroup: rbac.authorization.k8s.io
+
+# Recuperar o token da conta de serviço
+# oc create token -n kafka-dev grafana-serviceaccount --duration=4294967296s
+# Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3SWhaMG9tNzlCTHAzUUlVelZCZG5PN1JFbGZtN2k5dWFhMW5MTWE2eE0ifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjIl0sImV4cCI6NjA1MDc3NTM0OSwiaWF0IjoxNzU1ODA4MDUzLCJpc3MiOiJodHRwczovL2t1YmVybmV0ZXMuZGVmYXVsdC5zdmMiLCJrdWJlcm5ldGVzLmlvIjp7Im5hbWVzcGFjZSI6ImthZmthLWRldiIsInNlcnZpY2VhY2NvdW50Ijp7Im5hbWUiOiJncmFmYW5hLXNlcnZpY2VhY2NvdW50IiwidWlkIjoiYTdlOTk2OWQtZTA0ZS00N2MxLWFlZDAtYWZlMmYwZTY0NWE4In19LCJuYmYiOjE3NTU4MDgwNTMsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprYWZrYS1kZXY6Z3JhZmFuYS1zZXJ2aWNlYWNjb3VudCJ9.axyf9MmvOuqmMwvSxDT3-Lexsn6VNBeIqV5cRvp450n49Cc9ya6PirrxALZWD_pdZPK30DUi7z25Hf3sMhVVmfD3uCTXABenRzK0YsJ56QEMV2kPUKZWm1eJy3_UdBfVmEVZkPco7TSfwHeJcUxlslRcrzb51BsZorfwGXzyMFNlk8TzlTCmgR8v-uLJOmLWRkP4dA35HFcLU1dM95rOBZaCNXGMkjIxrdDU6pd5sLuBjzFCS1Rn_2-C5RLxxruGgkg5oidZH4Dw2jjlMrFaWXQel1bOO1xLutjphQQA1XxG6DIbyRHtzxZIVAQYzowQfWZ4NrZijlGnY_PYO7pzRCHtD9QozlFeyUP-naZhwOeKQlC6tBtG8YJGlfZQIXl1aRJUoo58cl4r9LVTVMlZCOAzXF9avmRHikmdHskmLNRo8xq2xE5_eozJm04yeng20DsnId2tUr__FHB_4u6m1AZE1GjHQKhljtFxXs5QtrVXCuuBhnaWDzzkObQbAYcJGn0-WzmnqE5LZR2V7Y0pZqz8_qkjaMj1upKFRjSz8pIZvABa6SgbaGE2B5gqLVwIbjh9Os-vK1JVGKAG0owLOj26nk9EUDQJ-CKmQLZjFL_yI_qWVEuNw2l_tRGGFmlMTxqY5WEy9q8ylC8mQ9OR0g0kH9xl62uzwUn-LLEe6OQ
+
+
+# service do thanos
+# thanos-querier.openshift-monitoring.svc.cluster.local:9091
+# Custom HTTP Headers: Authorization

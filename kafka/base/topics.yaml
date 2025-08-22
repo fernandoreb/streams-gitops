@@ -1,0 +1,175 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: cobr
+  labels:
+    strimzi.io/cluster: cluster-banestes
+spec:
+  partitions: 1
+  replicas: 2
+  topicName: cobr
+
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: cobr.arquivo.inclusao.nuclea
+  labels:
+    strimzi.io/cluster: cluster-banestes
+spec:
+  config:
+    segment.ms: '604800000'
+    min.insync.replicas: '2'
+    segment.jitter.ms: '0'
+    flush.ms: '9223372036854775807'
+    retention.ms: '604800000'
+    max.message.bytes: '1048588'
+    retention.bytes: '-1'
+    cleanup.policy: delete
+  partitions: 1
+  replicas: 2
+  topicName: cobr.arquivo.inclusao.nuclea
+
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: cobr.cnab.240.full
+  labels:
+    strimzi.io/cluster: cluster-banestes
+spec:
+  config:
+    cleanup.policy: delete
+    max.message.bytes: '1048588'
+    min.insync.replicas: '2'
+    retention.bytes: '-1'
+    retention.ms: '604800000'
+  partitions: 10
+  replicas: 3
+  topicName: cobr.cnab.240.full
+
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: cobr.dlq.titulo.pronto.nuclea
+  labels:
+    strimzi.io/cluster: cluster-banestes
+spec:
+  config:
+    cleanup.policy: delete
+    max.message.bytes: '1048588'
+    min.insync.replicas: '2'
+    retention.bytes: '-1'
+    retention.ms: '604800000'
+  partitions: 5
+  replicas: 2
+  topicName: cobr.dlq.titulo.pronto.nuclea
+
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: cobr.dlq.titulo.retorno.nuclea
+  labels:
+    strimzi.io/cluster: cluster-banestes
+spec:
+  config:
+    cleanup.policy: delete
+    max.message.bytes: '1048588'
+    min.insync.replicas: '2'
+    retention.bytes: '-1'
+    retention.ms: '604800000'
+  partitions: 5
+  replicas: 2
+  topicName: cobr.dlq.titulo.retorno.nuclea
+
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: cobr.reprocessamento.enriquecedor
+  labels:
+    strimzi.io/cluster: cluster-banestes
+spec:
+  config:
+    cleanup.policy: delete
+    max.message.bytes: '1048588'
+    min.insync.replicas: '1'
+    retention.bytes: '-1'
+    retention.ms: '604800000'
+  partitions: 1
+  replicas: 2
+  topicName: cobr.reprocessamento.enriquecedor
+
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: cobr.titulo.inclusao.bd
+  labels:
+    strimzi.io/cluster: cluster-banestes
+spec:
+  config:
+    cleanup.policy: delete
+    max.message.bytes: '1048588'
+    min.insync.replicas: '2'
+    retention.bytes: '-1'
+    retention.ms: '604800000'
+  partitions: 10
+  replicas: 3
+  topicName: cobr.titulo.inclusao.bd
+
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: cobr.titulo.pronto.nuclea
+  labels:
+    strimzi.io/cluster: cluster-banestes
+spec:
+  config:
+    cleanup.policy: delete
+    max.message.bytes: '1048588'
+    min.insync.replicas: '2'
+    retention.bytes: '-1'
+    retention.ms: '604800000'
+  partitions: 10
+  replicas: 2
+  topicName: cobr.titulo.pronto.nuclea
+
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: cobr.titulo.retorno.nuclea
+  labels:
+    strimzi.io/cluster: cluster-banestes
+spec:
+  config:
+    cleanup.policy: delete
+    max.message.bytes: '1048588'
+    min.insync.replicas: '2'
+    retention.bytes: '-1'
+    retention.ms: '604800000'
+  partitions: 10
+  replicas: 2
+  topicName: cobr.titulo.retorno.nuclea
+
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: samples.sample.topic
+  labels:
+    strimzi.io/cluster: cluster-banestes
+spec:
+  config:
+    cleanup.policy: delete
+    max.message.bytes: '1048588'
+    min.insync.replicas: '2'
+    retention.bytes: '-1'
+    retention.ms: '0'
+  partitions: 10
+  replicas: 2
+  topicName: samples.sample.topic

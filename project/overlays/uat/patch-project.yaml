@@ -1,0 +1,11 @@
+- op: replace
+  path: /metadata/name
+  value: kafka
+
+- op: add
+  path: /metadata/annotations
+  value:
+    openshift.io/description: Namespace dedicado ao Kafka UAT
+    scheduler.alpha.kubernetes.io/defaultTolerations: '[{"operator": "Exists", "effect": "NoSchedule","key":"amqstreams"}]'
+    openshift.io/display-name: kafka-uat
+    openshift.io/node-selector: region=uat,zone=amqstreams

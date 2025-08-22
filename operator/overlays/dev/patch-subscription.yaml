@@ -1,0 +1,4 @@
+- op: replace
+  path: /metadata/labels
+  value:
+    operators.coreos.com/amq-streams.kafka-dev: ''
